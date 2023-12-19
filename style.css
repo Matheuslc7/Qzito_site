@@ -40,6 +40,11 @@ main h1 {
   text-align: center;
 }
 
+.botaoRemessa:hover {
+  background-color: var(--cor1);
+  color: aliceblue;
+}
+
 .botaoEnviadas {
   width: 7%;
   text-decoration: none;
@@ -50,17 +55,32 @@ main h1 {
   text-align: center;
 }
 
+.botaoEnviadas:hover {
+  background-color: var(--cor1);
+  color: aliceblue;
+}
+
 footer {
   background-color: var(--cor1);
   text-align: center;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  bottom: 0;
 }
 
 footer p {
   text-transform: uppercase;
   color: aliceblue;
+  margin: 1rem 0;
 }
 
 footer p a {
   text-decoration: none;
   color: aliceblue;
+  margin: 1rem 0;
+}
+
+footer p a:hover {
+  color: bisque;
 }
