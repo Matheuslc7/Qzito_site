@@ -12,12 +12,12 @@
 }
 
 .logo img {
-  width: 15%;
+  width: 12%;
 }
 
 .textoPrincipal {
     text-align: center;
-    margin: 2rem 0;
+    margin: 1rem 0;
 }
 
 .formEnvio {
@@ -28,4 +28,56 @@ form {
     display: grid;
     width: 100%;
     justify-content: center;
+}
+
+#codbarras {
+  margin: 1rem 0; 
+}
+
+h2 {
+  text-align: center;
+}
+
+#barcodeList {
+  display: none;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  word-break: break-all;
+}
+
+#subtotalList {
+  text-align: center;
+}
+
+#total {
+  text-align: center;
+  text-decoration: overline;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+footer {
+  background-color: var(--cor1);
+  text-align: center;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
+
+footer p {
+  text-transform: uppercase;
+  color: aliceblue;
+  margin: 1rem 0;
+}
+
+footer p a {
+  text-decoration: none;
+  color: aliceblue;
+  margin: 1rem 0;
+}
+
+footer p a:hover {
+  color: bisque;
 }

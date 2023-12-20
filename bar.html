@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Códigos de Barras EAN-13</title>
+  <style>
+    /* Estilo para os códigos de barras */
+    .barcode {
+      margin-bottom: 10px;
+    }
+
+    /* Estilo para os subtotais */
+    .subtotal {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <form>
+    <label for="barcodeInput">Insira o código de barras EAN-13:</label>
+    <input type="text" id="barcodeInput" maxlength="13">
+  </form>
+
+  <div id="barcodeList">
+    <h2>Códigos de Barras Lidos:</h2>
+    <!-- Aqui serão exibidos os códigos de barras lidos -->
+  </div>
+  
+  <div id="subtotalList">
+    <h2>Subtotal por Código de Barras:</h2>
+    <!-- Aqui serão exibidos os subtotais -->
+  </div>
+  
+  <div id="total"></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const barcodeInput = document.getElementById('barcodeInput');
+      const barcodeList = document.getElementById('barcodeList');
+      const subtotalList = document.getElementById('subtotalList');
+      const totalElement = document.getElementById('total');
+      let count = 0;
+      const barcodes = {};
+
+      barcodeInput.addEventListener('input', (event) => {
+        const barcodeValue = event.target.value.trim();
+
+        if (barcodeValue.length === 13) {
+          // Armazenar o valor e calcular subtotal por código de barras
+          if (!barcodes[barcodeValue]) {
+            barcodes[barcodeValue] = 0;
+          }
+          barcodes[barcodeValue] += 1;
+
+          // Imprimir o código de barras na tela
+          const barcodeDiv = document.createElement('div');
+          barcodeDiv.classList.add('barcode');
+          barcodeDiv.textContent = `Código ${++count}: ${barcodeValue}`;
+          barcodeList.appendChild(barcodeDiv);
+
+          // Limpar o campo de entrada
+          barcodeInput.value = '';
+
+          // Atualizar subtotal por código de barras na tela
+          subtotalList.innerHTML = '<h2>Subtotal por Código de Barras:</h2>';
+          for (const barcode in barcodes) {
+            const subtotalDiv = document.createElement('div');
+            subtotalDiv.classList.add('subtotal');
+            subtotalDiv.textContent = `Código ${barcode}: ${barcodes[barcode]}`;
+            subtotalList.appendChild(subtotalDiv);
+          }
+
+          // Calcular e exibir o total
+          const total = Object.values(barcodes).reduce((acc, curr) => acc + curr, 0);
+          totalElement.textContent = `Total de códigos lidos: ${total}`;
+        }
+      });
+    });
+  </script>
+</body>
+</html>
