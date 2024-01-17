@@ -65,6 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
       // Extrair os dados do input e das divs
       const refValue = document.getElementById('ref').value.trim();
+      const barcodeData = Array.from(barcodeList.children).map(div => div.textContent);
       const subtotalData = Array.from(subtotalList.children).map(div => div.textContent);
       const totalData = totalElement.textContent;
   
@@ -74,6 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Criar um objeto com os dados que você deseja enviar
       const postData = {
         ref: refValue,
+        barcodeList: barcodeData,
         subtotalList: subtotalData,
         total: totalData,
         datetime: dateTimeBrasilia  // Adiciona a data e hora atual em Brasília
