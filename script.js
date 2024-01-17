@@ -5,78 +5,112 @@ document.addEventListener('DOMContentLoaded', () => {
     const subtotalList = document.getElementById('subtotalList');
     const totalElement = document.getElementById('total');
     let count = 0;
-    const barcodes = {};
-
+    const barcodes = JSON.parse(localStorage.getItem('barcodes')) || {};
+  
+    // Função para atualizar a exibição dos códigos de barras na tela
+    const updateBarcodeDisplay = () => {
+      barcodeList.innerHTML = '';
+      for (const barcode in barcodes) {
+        const barcodeDiv = document.createElement('div');
+        barcodeDiv.classList.add('barcode');
+        barcodeDiv.textContent = `Código : ${++count}: ${barcode}`;
+        barcodeList.appendChild(barcodeDiv);
+      }
+    };
+  
+    // Função para atualizar a exibição dos subtotais na tela
+    const updateSubtotalDisplay = () => {
+      subtotalList.innerHTML = '<h2>Subtotal por Código de Barras:</h2>';
+      for (const barcode in barcodes) {
+        const subtotalDiv = document.createElement('div');
+        subtotalDiv.classList.add('subtotal');
+        subtotalDiv.textContent = `Código ${barcode}: ${barcodes[barcode]}`;
+        subtotalList.appendChild(subtotalDiv);
+      }
+    };
+  
+    // Carregar códigos de barras salvos no localStorage ao carregar a página
+    updateBarcodeDisplay();
+    updateSubtotalDisplay();
+  
     barcodeInput.addEventListener('input', (event) => {
       const barcodeValue = event.target.value.trim();
-
+  
       if (barcodeValue.length === 13) {
-        // Armazenar o valor e calcular subtotal por código de barras
         if (!barcodes[barcodeValue]) {
           barcodes[barcodeValue] = 0;
         }
         barcodes[barcodeValue] += 1;
-
-        // Imprimir o código de barras na tela
-        const barcodeDiv = document.createElement('div');
-        barcodeDiv.classList.add('barcode');
-        barcodeDiv.textContent = `Código : ${++count}: ${barcodeValue}`;
-        barcodeList.appendChild(barcodeDiv);
-
+  
+        // Atualizar a exibição dos códigos de barras
+        updateBarcodeDisplay();
+  
         // Limpar o campo de entrada
         barcodeInput.value = '';
-
-        // Atualizar subtotal por código de barras na tela
-        subtotalList.innerHTML = '<h2>Subtotal por Código de Barras:</h2>';
-        for (const barcode in barcodes) {
-          const subtotalDiv = document.createElement('div');
-          subtotalDiv.classList.add('subtotal');
-          subtotalDiv.textContent = `Código ${barcode}: ${barcodes[barcode]}`;
-          subtotalList.appendChild(subtotalDiv);
-        }
-
+  
+        // Atualizar a exibição dos subtotais
+        updateSubtotalDisplay();
+  
         // Calcular e exibir o total
         const total = Object.values(barcodes).reduce((acc, curr) => acc + curr, 0);
         totalElement.textContent = `Total de códigos lidos: ${total}`;
-
+  
+        // Salvar os códigos de barras no localStorage
+        localStorage.setItem('barcodes', JSON.stringify(barcodes));
       }
     });
-    myForm.addEventListener('submit', (event) => {
-      event.preventDefault(); // Prevenir o envio padrão do formulário
-
-      // Obter os valores de subtotalList
-      const subtotalItems = document.querySelectorAll('.subtotal');
-      const subtotalsToSend = [];
-
-      subtotalItems.forEach((item) => {
-        const [codigo, quantidade] = item.textContent.split(':');
-        subtotalsToSend.push({
-          codigo: codigo.trim().replace('Código ', ''),
-          quantidade: parseInt(quantidade.trim()),
+  
+    myForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+  
+      // Extrair os dados do input e das divs
+      const refValue = document.getElementById('ref').value.trim();
+      const subtotalData = Array.from(subtotalList.children).map(div => div.textContent);
+      const totalData = totalElement.textContent;
+  
+      // Obter a data e hora atual em horário de Brasília
+      const dateTimeBrasilia = luxon.DateTime.now().setZone('America/Sao_Paulo').toISO();
+  
+      // Criar um objeto com os dados que você deseja enviar
+      const postData = {
+        ref: refValue,
+        subtotalList: subtotalData,
+        total: totalData,
+        datetime: dateTimeBrasilia  // Adiciona a data e hora atual em Brasília
+      };
+  
+      try {
+        // Enviar os dados para o servidor usando a função fetch
+        const response = await fetch('https://api.sheetmonkey.io/form/tU48xyPpPN3DsVVefCT7d6', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(postData)
         });
-      });
-
-      // Enviar os subtotais para o servidor (ajuste o URL para o seu endpoint)
-      fetch('http://localhost:3000/armazenarSubtotais', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ subtotais: subtotalsToSend }),
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error('Erro ao enviar os subtotais.');
-          }
-          return response.json();
-        })
-        .then((data) => {
-          console.log('Subtotais enviados com sucesso:', data);
-          // Lógica adicional após o envio bem-sucedido, se necessário
-        })
-        .catch((error) => {
-          console.error('Erro ao enviar os subtotais:', error);
-        });
+  
+        // Verificar se a solicitação foi bem-sucedida
+        if (response.ok) {
+          // Limpar os valores dentro das divs após o envio bem-sucedido
+          barcodeList.innerHTML = '';
+          subtotalList.innerHTML = '';
+          totalElement.textContent = '';
+  
+          // Limpar o localStorage
+          localStorage.removeItem('barcodes');
+  
+          // Limpar o valor do input "ref"
+          document.getElementById('ref').value = '';
+  
+          // Informar ao usuário que o envio foi bem-sucedido (opcional)
+          alert('Dados enviados com sucesso!');
+        } else {
+          // Caso a solicitação falhe, você pode lidar com isso de acordo com suas necessidades
+          console.error('Erro ao enviar os dados para o servidor.');
+        }
+      } catch (error) {
+        console.error('Erro na solicitação:', error);
+      }
     });
   });
   
