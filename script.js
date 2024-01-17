@@ -102,8 +102,11 @@ document.addEventListener('DOMContentLoaded', () => {
           // Limpar o valor do input "ref"
           document.getElementById('ref').value = '';
   
-          // Informar ao usuário que o envio foi bem-sucedido (opcional)
-          alert('Dados enviados com sucesso!');
+          // Exibir mensagem na tela
+          alert('Remessa enviada com sucesso');
+  
+          // Redirecionar para a página inicial (index.html)
+          window.location.href = 'index.html';
         } else {
           // Caso a solicitação falhe, você pode lidar com isso de acordo com suas necessidades
           console.error('Erro ao enviar os dados para o servidor.');
