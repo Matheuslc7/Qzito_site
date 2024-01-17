@@ -4,12 +4,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const barcodeList = document.getElementById('barcodeList');
     const subtotalList = document.getElementById('subtotalList');
     const totalElement = document.getElementById('total');
-    let count = 0;
     const barcodes = JSON.parse(localStorage.getItem('barcodes')) || {};
   
     // Função para atualizar a exibição dos códigos de barras na tela
     const updateBarcodeDisplay = () => {
       barcodeList.innerHTML = '';
+      let count = 0;
       for (const barcode in barcodes) {
         const barcodeDiv = document.createElement('div');
         barcodeDiv.classList.add('barcode');
