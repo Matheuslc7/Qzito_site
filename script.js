@@ -60,59 +60,63 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   
-    myForm.addEventListener('submit', async (event) => {
-      event.preventDefault();
+    // Lidar com o clique do botão de envio no lugar do evento de envio do formulário
+    myForm.addEventListener('click', async (event) => {
+      // Verificar se o clique ocorreu no botão de envio
+      if (event.target.type === 'submit') {
+        event.preventDefault();
   
-      // Extrair os dados do input e das divs
-      const refValue = document.getElementById('ref').value.trim();
-      const subtotalData = Array.from(subtotalList.children).map(div => div.textContent);
-      const totalData = totalElement.textContent;
+        // Extrair os dados do input e das divs
+        const refValue = document.getElementById('ref').value.trim();
+        const subtotalData = Array.from(subtotalList.children).map(div => div.textContent);
+        const totalData = totalElement.textContent;
   
-      // Obter a data e hora atual em horário de Brasília
-      const dateTimeBrasilia = luxon.DateTime.now().setZone('America/Sao_Paulo').toISO();
+        // Obter a data e hora atual em horário de Brasília
+        const dateTimeBrasilia = luxon.DateTime.now().setZone('America/Sao_Paulo').toISO();
   
-      try {
-        // Criar um objeto com os dados que você deseja enviar
-        const postData = {
-          ref: refValue,
-          subtotalList: subtotalData,
-          total: totalData,
-          datetime: dateTimeBrasilia  // Adiciona a data e hora atual em Brasília
-        };
+        try {
+          // Criar um objeto com os dados que você deseja enviar
+          const postData = {
+            ref: refValue,
+            subtotalList: subtotalData,
+            total: totalData,
+            datetime: dateTimeBrasilia  // Adiciona a data e hora atual em Brasília
+          };
   
-        // Enviar os dados para o servidor usando a função fetch
-        const response = await fetch('https://api.sheetmonkey.io/form/tU48xyPpPN3DsVVefCT7d6', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(postData)
-        });
+          // Enviar os dados para o servidor usando a função fetch
+          const response = await fetch('https://api.sheetmonkey.io/form/tU48xyPpPN3DsVVefCT7d6', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(postData)
+          });
   
-        // Verificar se a solicitação foi bem-sucedida
-        if (response.ok) {
-          // Limpar os valores dentro das divs após o envio bem-sucedido
-          barcodeList.innerHTML = '';
-          subtotalList.innerHTML = '';
-          totalElement.textContent = '';
+          // Verificar se a solicitação foi bem-sucedida
+          if (response.ok) {
+            // Limpar os valores dentro das divs após o envio bem-sucedido
+            barcodeList.innerHTML = '';
+            subtotalList.innerHTML = '';
+            totalElement.textContent = '';
   
-          // Limpar o localStorage
-          localStorage.clear();
+            // Limpar os dados específicos no localStorage
+            localStorage.removeItem('barcodes');
   
-          // Limpar o valor do input "ref"
-          document.getElementById('ref').value = '';
+            // Limpar o valor do input "ref"
+            document.getElementById('ref').value = '';
   
-          // Exibir mensagem na tela
-          alert('Remessa enviada com sucesso');
+            // Exibir mensagem na tela
+            alert('Remessa enviada com sucesso');
   
-          // Redirecionar para a página inicial (index.html)
-          window.location.href = 'index.html';
-        } else {
-          // Caso a solicitação falhe, você pode lidar com isso de acordo com suas necessidades
-          console.error('Erro ao enviar os dados para o servidor.');
+            // Redirecionar para a página inicial (index.html)
+            window.location.href = 'index.html';
+          } else {
+            // Caso a solicitação falhe, você pode lidar com isso de acordo com suas necessidades
+            console.error('Erro ao enviar os dados para o servidor.');
+          }
+        } catch (error) {
+          console.error('Erro na solicitação:', error);
         }
-      } catch (error) {
-        console.error('Erro na solicitação:', error);
       }
     });
   });
