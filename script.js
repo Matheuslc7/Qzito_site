@@ -65,23 +65,26 @@ document.addEventListener('DOMContentLoaded', () => {
   
       // Extrair os dados do input e das divs
       const refValue = document.getElementById('ref').value.trim();
-      const barcodeData = Array.from(barcodeList.children).map(div => div.textContent);
       const subtotalData = Array.from(subtotalList.children).map(div => div.textContent);
       const totalData = totalElement.textContent;
   
       // Obter a data e hora atual em horário de Brasília
       const dateTimeBrasilia = luxon.DateTime.now().setZone('America/Sao_Paulo').toISO();
   
-      // Criar um objeto com os dados que você deseja enviar
-      const postData = {
-        ref: refValue,
-        barcodeList: barcodeData,
-        subtotalList: subtotalData,
-        total: totalData,
-        datetime: dateTimeBrasilia  // Adiciona a data e hora atual em Brasília
-      };
+      // Limpar os valores dentro das divs após o envio bem-sucedido
+      barcodeList.innerHTML = '';
+      subtotalList.innerHTML = '';
+      totalElement.textContent = '';
   
       try {
+        // Criar um objeto com os dados que você deseja enviar
+        const postData = {
+          ref: refValue,
+          subtotalList: subtotalData,
+          total: totalData,
+          datetime: dateTimeBrasilia  // Adiciona a data e hora atual em Brasília
+        };
+  
         // Enviar os dados para o servidor usando a função fetch
         const response = await fetch('https://api.sheetmonkey.io/form/tU48xyPpPN3DsVVefCT7d6', {
           method: 'POST',
@@ -93,11 +96,6 @@ document.addEventListener('DOMContentLoaded', () => {
   
         // Verificar se a solicitação foi bem-sucedida
         if (response.ok) {
-          // Limpar os valores dentro das divs após o envio bem-sucedido
-          barcodeList.innerHTML = '';
-          subtotalList.innerHTML = '';
-          totalElement.textContent = '';
-  
           // Limpar o localStorage
           localStorage.removeItem('barcodes');
   
