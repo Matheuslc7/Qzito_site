@@ -71,11 +71,6 @@ document.addEventListener('DOMContentLoaded', () => {
       // Obter a data e hora atual em horário de Brasília
       const dateTimeBrasilia = luxon.DateTime.now().setZone('America/Sao_Paulo').toISO();
   
-      // Limpar os valores dentro das divs após o envio bem-sucedido
-      barcodeList.innerHTML = '';
-      subtotalList.innerHTML = '';
-      totalElement.textContent = '';
-  
       try {
         // Criar um objeto com os dados que você deseja enviar
         const postData = {
@@ -96,8 +91,13 @@ document.addEventListener('DOMContentLoaded', () => {
   
         // Verificar se a solicitação foi bem-sucedida
         if (response.ok) {
+          // Limpar os valores dentro das divs após o envio bem-sucedido
+          barcodeList.innerHTML = '';
+          subtotalList.innerHTML = '';
+          totalElement.textContent = '';
+  
           // Limpar o localStorage
-          localStorage.removeItem('barcodes');
+          localStorage.clear();
   
           // Limpar o valor do input "ref"
           document.getElementById('ref').value = '';
