@@ -1,4 +1,4 @@
-window.addEventListener('load', () => {
+document.addEventListener('DOMContentLoaded', () => {
   const barcodeInput = document.getElementById('barcodeInput');
   const myForm = document.getElementById('myForm');
   const barcodeList = document.getElementById('barcodeList');
@@ -6,7 +6,6 @@ window.addEventListener('load', () => {
   const totalElement = document.getElementById('total');
   const barcodes = JSON.parse(localStorage.getItem('barcodes')) || {};
 
-  // Restante do código permanece o mesmo
   // Função para atualizar a exibição dos códigos de barras na tela
   const updateBarcodeDisplay = () => {
       barcodeList.innerHTML = '';
@@ -33,6 +32,38 @@ window.addEventListener('load', () => {
   // Carregar códigos de barras salvos no localStorage ao carregar a página
   updateBarcodeDisplay();
   updateSubtotalDisplay();
+
+  barcodeInput.addEventListener('input', (event) => {
+      const barcodeValue = event.target.value.trim();
+
+      if (barcodeValue.length === 13) {
+          if (!barcodes[barcodeValue]) {
+              barcodes[barcodeValue] = 0;
+          }
+          barcodes[barcodeValue] += 1;
+
+          // Atualizar a exibição dos códigos de barras
+          updateBarcodeDisplay();
+
+          // Limpar o campo de entrada
+          barcodeInput.value = '';
+
+          // Atualizar a exibição dos subtotais
+          updateSubtotalDisplay();
+
+          // Calcular e exibir o total
+          const total = Object.values(barcodes).reduce((acc, curr) => acc + curr, 0);
+          totalElement.textContent = `Total de códigos lidos: ${total}`;
+
+          // Salvar os códigos de barras no localStorage
+          localStorage.setItem('barcodes', JSON.stringify(barcodes));
+      }
+  });
+
+  window.addEventListener('beforeunload', () => {
+      // Limpar os dados no localStorage antes de descarregar a página
+      localStorage.removeItem('barcodes');
+  });
 
   myForm.addEventListener('submit', async (event) => {
       event.preventDefault();
@@ -65,55 +96,14 @@ window.addEventListener('load', () => {
 
           // Verificar se a solicitação foi bem-sucedida
           if (response.ok) {
-              // Limpar os valores dentro das divs após o envio bem-sucedido
-              barcodeList.innerHTML = '';
-              subtotalList.innerHTML = '';
-              totalElement.textContent = '';
-
-              // Limpar os dados específicos no localStorage
-              localStorage.removeItem('barcodes');
-
-              // Limpar o valor do input "ref"
-              document.getElementById('ref').value = '';
-
               // Exibir mensagem na tela
               alert('Remessa enviada com sucesso');
-
-              // Redirecionar para a página inicial (index.html)
-              window.location.href = 'index.html';
           } else {
               // Caso a solicitação falhe, você pode lidar com isso de acordo com suas necessidades
               console.error('Erro ao enviar os dados para o servidor.');
           }
       } catch (error) {
           console.error('Erro na solicitação:', error);
-      }
-  });
-
-  barcodeInput.addEventListener('input', (event) => {
-      const barcodeValue = event.target.value.trim();
-
-      if (barcodeValue.length === 13) {
-          if (!barcodes[barcodeValue]) {
-              barcodes[barcodeValue] = 0;
-          }
-          barcodes[barcodeValue] += 1;
-
-          // Atualizar a exibição dos códigos de barras
-          updateBarcodeDisplay();
-
-          // Limpar o campo de entrada
-          barcodeInput.value = '';
-
-          // Atualizar a exibição dos subtotais
-          updateSubtotalDisplay();
-
-          // Calcular e exibir o total
-          const total = Object.values(barcodes).reduce((acc, curr) => acc + curr, 0);
-          totalElement.textContent = `Total de códigos lidos: ${total}`;
-
-          // Salvar os códigos de barras no localStorage
-          localStorage.setItem('barcodes', JSON.stringify(barcodes));
       }
   });
 });
