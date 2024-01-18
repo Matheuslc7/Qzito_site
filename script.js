@@ -101,8 +101,8 @@ document.addEventListener('DOMContentLoaded', () => {
               // Exibir mensagem na tela
               alert('Remessa enviada com sucesso');
 
-              // Redirecionar para a página inicial (index.html)
-              window.location.assign('index.html');
+              // Redirecionar para o site https://qzito-jeans.vercel.app/
+              window.location.assign('https://qzito-jeans.vercel.app/');
           } else {
               // Caso a solicitação falhe, você pode lidar com isso de acordo com suas necessidades
               console.error('Erro ao enviar os dados para o servidor.');
