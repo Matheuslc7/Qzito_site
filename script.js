@@ -96,9 +96,6 @@ document.addEventListener('DOMContentLoaded', () => {
   
             // Verificar se a solicitação foi bem-sucedida
             if (response.ok) {
-                // Exibir mensagem na tela
-                alert('Remessa enviada com sucesso');
-  
                 // Redirecionar para a página inicial (index.html)
                 setTimeout(() => {
                     window.location.replace("https://qzito-jeans.vercel.app/");
