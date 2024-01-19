@@ -100,7 +100,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert('Remessa enviada com sucesso');
   
                 // Redirecionar para a página inicial (index.html)
-                window.location.replace("https://qzito-jeans.vercel.app/");
+                setTimeout(() => {
+                    window.location.replace("https://qzito-jeans.vercel.app/");
+                }, 1000); // Atraso de 1 segundo (ajuste conforme necessário)
+                
             } else {
                 // Caso a solicitação falhe, você pode lidar com isso de acordo com suas necessidades
                 console.error('Erro ao enviar os dados para o servidor.');
