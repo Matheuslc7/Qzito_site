@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
   
-    window.addEventListener('beforeunload', () => {
+    window.addEventListener('unload', () => {
         // Limpar os dados no localStorage antes de descarregar a página
         localStorage.removeItem('barcodes');
     });
