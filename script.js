@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Redirecionar para a página inicial (index.html)
                 setTimeout(() => {
-                    window.location.replace("https://qzito-jeans.vercel.app/");
+                    window.location.href = "https://qzito-jeans.vercel.app/";
                 }, 1000); // Atraso de 1 segundo (ajuste conforme necessário)
             } else {
                 // Caso a solicitação falhe, você pode lidar com isso de acordo com suas necessidades
