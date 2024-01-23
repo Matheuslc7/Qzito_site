@@ -60,11 +60,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    window.addEventListener('beforeunload', () => {
-        // Limpar os dados no localStorage antes de descarregar a página
-        localStorage.removeItem('barcodes');
-    });
-
     myForm.addEventListener('submit', async (event) => {
         event.preventDefault();
 
@@ -99,11 +94,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Exibir mensagem na tela
                 alert('Remessa enviada com sucesso');
 
+                // Limpar os dados no localStorage após o envio bem-sucedido
+                localStorage.removeItem('barcodes');
+
                 // Redirecionar para a página inicial (index.html)
                 setTimeout(() => {
                     window.location.replace("https://qzito-jeans.vercel.app/");
                 }, 1000); // Atraso de 1 segundo (ajuste conforme necessário)
-
             } else {
                 // Caso a solicitação falhe, você pode lidar com isso de acordo com suas necessidades
                 console.error('Erro ao enviar os dados para o servidor.');
