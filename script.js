@@ -60,12 +60,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
   
-    window.addEventListener('beforeunload', () => {
+    // Remover o evento 'beforeunload'
+    window.onunload = () => {
         // Limpar os dados no localStorage antes de descarregar a página
         localStorage.removeItem('barcodes');
-    });
+    };
   
-    myForm.addEventListener('submit', async (event) => {
+    // Adicionar um ouvinte de evento para o botão de envio
+    document.getElementById('submitButton').addEventListener('click', async (event) => {
         event.preventDefault();
   
         // Extrair os dados do input e das divs
