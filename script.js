@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ref: refValue,
                 subtotalList: subtotalData,
                 total: totalData,
-                datetime: dateTimeBrasilia  // Adiciona a data e hora atual em Brasília
+                datetime: dateTimeBrasilia  // Adiciona a data e hora atual em Brasília.
             };
   
             // Enviar os dados para o servidor usando a função fetch
