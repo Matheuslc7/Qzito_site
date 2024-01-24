@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const subtotalList = document.getElementById('subtotalList');
     const totalElement = document.getElementById('total');
     const barcodes = JSON.parse(localStorage.getItem('barcodes')) || {};
-
+  
     // Função para atualizar a exibição dos códigos de barras na tela
     const updateBarcodeDisplay = () => {
         barcodeList.innerHTML = '';
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
             barcodeList.appendChild(barcodeDiv);
         }
     };
-
+  
     // Função para atualizar a exibição dos subtotais na tela
     const updateSubtotalDisplay = () => {
         subtotalList.innerHTML = '<h2>Subtotal por Código de Barras:</h2>';
@@ -28,49 +28,22 @@ document.addEventListener('DOMContentLoaded', () => {
             subtotalList.appendChild(subtotalDiv);
         }
     };
-
+  
     // Carregar códigos de barras salvos no localStorage ao carregar a página
     updateBarcodeDisplay();
     updateSubtotalDisplay();
-
-    barcodeInput.addEventListener('input', (event) => {
-        const barcodeValue = event.target.value.trim();
-
-        if (barcodeValue.length === 13) {
-            if (!barcodes[barcodeValue]) {
-                barcodes[barcodeValue] = 0;
-            }
-            barcodes[barcodeValue] += 1;
-
-            // Atualizar a exibição dos códigos de barras
-            updateBarcodeDisplay();
-
-            // Limpar o campo de entrada
-            barcodeInput.value = '';
-
-            // Atualizar a exibição dos subtotais
-            updateSubtotalDisplay();
-
-            // Calcular e exibir o total
-            const total = Object.values(barcodes).reduce((acc, curr) => acc + curr, 0);
-            totalElement.textContent = `Total de códigos lidos: ${total}`;
-
-            // Salvar os códigos de barras no localStorage
-            localStorage.setItem('barcodes', JSON.stringify(barcodes));
-        }
-    });
-
+  
     myForm.addEventListener('submit', async (event) => {
         event.preventDefault();
-
+  
         // Extrair os dados do input e das divs
         const refValue = document.getElementById('ref').value.trim();
         const subtotalData = Array.from(subtotalList.children).map(div => div.textContent);
         const totalData = totalElement.textContent;
-
+  
         // Obter a data e hora atual em horário de Brasília
         const dateTimeBrasilia = luxon.DateTime.now().setZone('America/Sao_Paulo').toISO();
-
+  
         try {
             // Criar um objeto com os dados que você deseja enviar
             const postData = {
@@ -79,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 total: totalData,
                 datetime: dateTimeBrasilia  // Adiciona a data e hora atual em Brasília
             };
-
+  
             // Enviar os dados para o servidor usando a função fetch
             const response = await fetch('https://api.sheetmonkey.io/form/tU48xyPpPN3DsVVefCT7d6', {
                 method: 'POST',
@@ -88,19 +61,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 body: JSON.stringify(postData)
             });
-
+  
             // Verificar se a solicitação foi bem-sucedida
             if (response.ok) {
+                // Limpar os valores dentro das divs após o envio bem-sucedido
+                barcodeList.innerHTML = '';
+                subtotalList.innerHTML = '';
+                totalElement.textContent = '';
+  
+                // Limpar os dados específicos no localStorage
+                localStorage.removeItem('barcodes');
+  
+                // Limpar o valor do input "ref"
+                document.getElementById('ref').value = '';
+  
                 // Exibir mensagem na tela
                 alert('Remessa enviada com sucesso');
-
-                // Limpar os dados no localStorage após o envio bem-sucedido
-                localStorage.removeItem('barcodes');
-
+  
                 // Redirecionar para a página inicial (index.html)
-                setTimeout(() => {
-                    window.location.href = "https://qzito-jeans.vercel.app/";
-                }, 1000); // Atraso de 1 segundo (ajuste conforme necessário)
+                window.location.href = 'index.html';
             } else {
                 // Caso a solicitação falhe, você pode lidar com isso de acordo com suas necessidades
                 console.error('Erro ao enviar os dados para o servidor.');
@@ -109,4 +88,31 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Erro na solicitação:', error);
         }
     });
-});
+  
+    barcodeInput.addEventListener('input', (event) => {
+        const barcodeValue = event.target.value.trim();
+  
+        if (barcodeValue.length === 13) {
+            if (!barcodes[barcodeValue]) {
+                barcodes[barcodeValue] = 0;
+            }
+            barcodes[barcodeValue] += 1;
+  
+            // Atualizar a exibição dos códigos de barras
+            updateBarcodeDisplay();
+  
+            // Limpar o campo de entrada
+            barcodeInput.value = '';
+  
+            // Atualizar a exibição dos subtotais
+            updateSubtotalDisplay();
+  
+            // Calcular e exibir o total
+            const total = Object.values(barcodes).reduce((acc, curr) => acc + curr, 0);
+            totalElement.textContent = `Total de códigos lidos: ${total}`;
+  
+            // Salvar os códigos de barras no localStorage
+            localStorage.setItem('barcodes', JSON.stringify(barcodes));
+        }
+    });
+  });
