@@ -98,6 +98,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (response.ok) {
                 // Exibir mensagem na tela
                 alert('Remessa enviada com sucesso');
+  
+                // Redirecionar para a página inicial (index.html)
+                window.location.href = 'index.html';
             } else {
                 // Caso a solicitação falhe, você pode lidar com isso de acordo com suas necessidades
                 console.error('Erro ao enviar os dados para o servidor.');
