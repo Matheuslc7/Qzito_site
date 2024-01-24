@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ref: refValue,
                 subtotalList: subtotalData,
                 total: totalData,
-                datetime: dateTimeBrasilia  // Adiciona a data e hora atual em Brasília.
+                datetime: dateTimeBrasilia  // Adiciona a data e hora atual em Brasília
             };
   
             // Enviar os dados para o servidor usando a função fetch
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert('Remessa enviada com sucesso');
   
                 // Redirecionar para a página inicial (index.html)
-                window.location.href = 'index.html';
+                window.location.assign('https://qzito-jeans.vercel.app/');
             } else {
                 // Caso a solicitação falhe, você pode lidar com isso de acordo com suas necessidades
                 console.error('Erro ao enviar os dados para o servidor.');
