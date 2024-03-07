@@ -59,18 +59,17 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('barcodes', JSON.stringify(barcodes));
       }
     });
-  
     myForm.addEventListener('submit', async (event) => {
       event.preventDefault();
-  
+    
       // Extrair os dados do input e das divs
       const refValue = document.getElementById('ref').value.trim();
       const subtotalData = Array.from(subtotalList.children).map(div => div.textContent);
       const totalData = totalElement.textContent;
-  
+    
       // Obter a data e hora atual em horário de Brasília
       const dateTimeBrasilia = luxon.DateTime.now().setZone('America/Sao_Paulo').toISO();
-  
+    
       try {
         // Criar um objeto com os dados que você deseja enviar
         const postData = {
@@ -79,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
           total: totalData,
           datetime: dateTimeBrasilia
         };
-  
+    
         // Enviar os dados para o servidor usando a função fetch
         const response = await fetch('https://api.sheetmonkey.io/form/tU48xyPpPN3DsVVefCT7d6', {
           method: 'POST',
@@ -88,15 +87,15 @@ document.addEventListener('DOMContentLoaded', () => {
           },
           body: JSON.stringify(postData)
         });
-  
+    
         // Verificar se a solicitação foi bem-sucedida
         if (response.ok) {
           // Exibir mensagem na tela
           alert('Remessa enviada com sucesso');
-  
+    
           // Limpar os dados no localStorage
           localStorage.removeItem('barcodes');
-  
+    
           // Redirecionar para a página inicial (index.html)
           window.location.assign('https://qzito-jeans.vercel.app/');
         } else {
@@ -107,4 +106,3 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
-  
