@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const barcodeList = document.getElementById('barcodeList');
   const subtotalList = document.getElementById('subtotalList');
   const totalElement = document.getElementById('total');
+  const codBarrasButton = document.getElementById("codBarras");
+  const messageSuccess = document.getElementById("messageSuccess");
   const barcodes = JSON.parse(localStorage.getItem('barcodes')) || {};
 
   // Função para atualizar a exibição dos códigos de barras na tela
@@ -103,5 +105,11 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (error) {
       console.error('Erro na solicitação:', error);
     }
+    codBarrasButton.onclick = function(event) {
+      // Impede o envio padrão do formulário
+      event.preventDefault();
+    
+      // Altera o estilo do elemento de mensagem de sucesso para torná-lo visível
+      messageSuccess.style.display = "block";};
   });
 });
